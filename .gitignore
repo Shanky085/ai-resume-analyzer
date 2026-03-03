@@ -1,0 +1,4 @@
+venv/
+__pycache__/
+analysis_report.txt
+*.pyc
