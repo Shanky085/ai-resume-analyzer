@@ -15,13 +15,47 @@
 
 ---
 
-## 🖼️ Demo
+## Demo
 
-> _Screenshot placeholder — run the app locally and replace this section with a screenshot of the Streamlit UI._
+![AI Resume Analyzer Demo](docs/demo.png)
 
-```
-Upload PDF → Paste Job Description → Analyze → View scores & download report
-```
+> **Don't see an image?** Follow the steps below to capture and add the screenshot.
+
+<details>
+<summary>📸 How to add the demo screenshot</summary>
+
+### Steps
+
+1. **Run the app locally:**
+   ```bash
+   streamlit run app.py
+   ```
+
+2. **Open** `http://localhost:8501` in your browser.
+
+3. **Use the app** — upload a sample PDF resume and paste a job description, then click **🔍 Analyze Resume** so scores and skill pills are visible.
+
+4. **Take a full-page screenshot:**
+   - **Windows:** `Win + Shift + S` (Snip & Sketch) or `PrtScn`, then paste into Paint and crop
+   - **macOS:** `Cmd + Shift + 4`, drag to select the browser window
+
+5. **Save the file** as `docs/demo.png` inside this repository:
+   ```
+   ai-resume-analyzer/
+   └── docs/
+       └── demo.png   ← save here
+   ```
+
+6. **Commit the screenshot:**
+   ```bash
+   git add docs/demo.png
+   git commit -m "docs: add app screenshot"
+   git push
+   ```
+
+The image will now render automatically in this README on GitHub.
+
+</details>
 
 ---
 

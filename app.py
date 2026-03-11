@@ -1,7 +1,15 @@
 import re
+import os
 import streamlit as st
 import pdfplumber
+from dotenv import load_dotenv
 from sentence_transformers import SentenceTransformer, util
+
+# Load .env into os.environ (silently ignored if file absent)
+load_dotenv()
+
+ST_MODEL_NAME = os.getenv("ST_MODEL_NAME", "all-MiniLM-L6-v2")
+
 
 # ── Page config ──────────────────────────────────────────────────────────────
 st.set_page_config(
@@ -155,7 +163,7 @@ TECH_SKILLS = {
 
 @st.cache_resource(show_spinner="Loading semantic model…")
 def _load_model():
-    return SentenceTransformer('all-MiniLM-L6-v2')
+    return SentenceTransformer(ST_MODEL_NAME)
 
 def preprocess(text: str) -> set:
     text = text.lower()
