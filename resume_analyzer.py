@@ -1,6 +1,18 @@
 import re
-from sklearn.feature_extraction.text import TfidfVectorizer
-from sklearn.metrics.pairwise import cosine_similarity
+import sys
+import pdfplumber
+from sentence_transformers import SentenceTransformer, util
+
+def read_file(path: str) -> str:
+    """Read text from a .pdf or .txt file."""
+    if path.lower().endswith(".pdf"):
+        with pdfplumber.open(path) as pdf:
+            return "\n".join(
+                page.extract_text() or "" for page in pdf.pages
+            )
+    with open(path, "r", encoding="utf-8") as f:
+        return f.read()
+
 
 # Predefined technical skills
 tech_skills = {
@@ -15,12 +27,11 @@ def preprocess(text):
     words = set(text.split())
     return words
 
-# Read files
-with open("sample_resume.txt", "r") as file:
-    resume_text = file.read()
-
-with open("job_description.txt", "r") as file:
-    job_text = file.read()
+# Read input files (supports .pdf and .txt)
+_resume_path = sys.argv[1] if len(sys.argv) > 1 else "sample_resume.txt"
+_job_path    = sys.argv[2] if len(sys.argv) > 2 else "job_description.txt"
+resume_text = read_file(_resume_path)
+job_text    = read_file(_job_path)
 
 # ---- Skill-Based Analysis ----
 resume_words = preprocess(resume_text)
@@ -37,13 +48,10 @@ if len(job_required_skills) != 0:
 else:
     skill_match_percentage = 0
 
-# ---- Semantic Similarity (TF-IDF) ----
-documents = [resume_text, job_text]
-vectorizer = TfidfVectorizer()
-tfidf_matrix = vectorizer.fit_transform(documents)
-
-similarity_score = cosine_similarity(tfidf_matrix[0:1], tfidf_matrix[1:2])
-semantic_percentage = similarity_score[0][0] * 100
+# ---- Semantic Similarity (sentence-transformers) ----
+_model = SentenceTransformer('all-MiniLM-L6-v2')
+_embeddings = _model.encode([resume_text, job_text], convert_to_tensor=True)
+semantic_percentage = float(util.cos_sim(_embeddings[0], _embeddings[1])[0][0]) * 100
 
 # ---- Performance Grade ----
 final_score = (0.6 * skill_match_percentage) + (0.4 * semantic_percentage)
@@ -57,8 +65,9 @@ else:
 
 # ---- Generate Report ----
 import re
-from sklearn.feature_extraction.text import TfidfVectorizer
-from sklearn.metrics.pairwise import cosine_similarity
+import sys
+import pdfplumber
+from sentence_transformers import SentenceTransformer, util
 
 # Predefined technical skills
 tech_skills = {
@@ -73,12 +82,11 @@ def preprocess(text):
     words = set(text.split())
     return words
 
-# Read files
-with open("sample_resume.txt", "r") as file:
-    resume_text = file.read()
-
-with open("job_description.txt", "r") as file:
-    job_text = file.read()
+# Read input files (supports .pdf and .txt)
+_resume_path = sys.argv[1] if len(sys.argv) > 1 else "sample_resume.txt"
+_job_path    = sys.argv[2] if len(sys.argv) > 2 else "job_description.txt"
+resume_text = read_file(_resume_path)
+job_text    = read_file(_job_path)
 
 # ---- Skill-Based Analysis ----
 resume_words = preprocess(resume_text)
@@ -95,13 +103,10 @@ if len(job_required_skills) != 0:
 else:
     skill_match_percentage = 0
 
-# ---- Semantic Similarity (TF-IDF) ----
-documents = [resume_text, job_text]
-vectorizer = TfidfVectorizer()
-tfidf_matrix = vectorizer.fit_transform(documents)
-
-similarity_score = cosine_similarity(tfidf_matrix[0:1], tfidf_matrix[1:2])
-semantic_percentage = similarity_score[0][0] * 100
+# ---- Semantic Similarity (sentence-transformers) ----
+_model = SentenceTransformer('all-MiniLM-L6-v2')
+_embeddings = _model.encode([resume_text, job_text], convert_to_tensor=True)
+semantic_percentage = float(util.cos_sim(_embeddings[0], _embeddings[1])[0][0]) * 100
 
 # ---- Performance Grade ----
 final_score = (0.6 * skill_match_percentage) + (0.4 * semantic_percentage)
@@ -118,7 +123,7 @@ report = f"""
 ================ Resume Analysis Report ================
 
 Skill-Based Match Percentage: {skill_match_percentage:.2f}%
-Semantic Similarity (TF-IDF): {semantic_percentage:.2f}%
+Semantic Similarity (sentence-transformers): {semantic_percentage:.2f}%
 
 --------------------------------------------------------
 Job Required Skills: {sorted(job_required_skills)}
