@@ -161,7 +161,7 @@ TECH_SKILLS = {
     "azure", "aws", "ai", "nlp"
 }
 
-@st.cache_resource(show_spinner="Loading semantic model…")
+@st.cache_resource(show_spinner="Loading AI model...")
 def _load_model():
     return SentenceTransformer(ST_MODEL_NAME)
 
